@@ -7,10 +7,10 @@ from lark.exceptions import UnexpectedCharacters
 from __config__ import GRAMMAR, MAX_THROWN, MAX_FACES
 from errors import NotFoundMethod, ParseError, DiceLimits
 
-__all__ = ["parse"]
+__all__ = ["calculate"]
 
 
-def calculation(tree: Tree):
+async def simple_calculation(tree: Tree):
     match tree.data:
         case "add":
             f = add
@@ -22,10 +22,10 @@ def calculation(tree: Tree):
             f = div
         case _ as unknown_method:
             raise NotFoundMethod("Not found method: " + unknown_method)
-    return f(*(get_next_point(child) for child in tree.children))
+    return f(*[await get_next_point(child) for child in tree.children])
 
 
-def roll_dice(tree: Tree):
+async def roll_dice(tree: Tree):
     if len(tree.children) == 2:
         thrown, face = [get_next_point(child) for child in tree.children]
     else:
@@ -38,22 +38,20 @@ def roll_dice(tree: Tree):
     return sum([randint(1, face) for _ in range(thrown)])
 
 
-def get_next_point(tree: Tree):
+async def get_next_point(tree: Tree):
     match tree.data:
-        case "dice":
-            return roll_dice(tree)
         case "add" | "sub" | "mul" | "div":
-            return calculation(tree)
+            return await simple_calculation(tree)
         case "to_int":
             return int(tree.children[0])
         case "res":
-            return sum(get_next_point(child) for child in tree.children)
+            return sum(await get_next_point(child) for child in tree.children)
         case _ as unknown:
             raise ParseError("Can't parse " + unknown)
 
 
-def parse(text: str):
+async def calculate(text: str):
     try:
-        return get_next_point(Lark(GRAMMAR, start="start").parse(text))
+        return await get_next_point(Lark(GRAMMAR, start="start").parse(text))
     except UnexpectedCharacters as e:
         raise ParseError(e)
