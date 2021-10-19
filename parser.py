@@ -1,10 +1,12 @@
+import os
 from operator import add, mul, sub, truediv as div, neg
 from random import randint
+from unittest import __dir__
 
 from lark import Lark, Tree
 from lark.exceptions import UnexpectedCharacters
 
-from __config__ import GRAMMAR, MAX_THROWN, MAX_FACES
+from __config__ import MAX_THROWN, MAX_FACES
 from errors import NotFoundMethod, ParseError, DiceLimits
 
 __all__ = ["calculate"]
@@ -45,13 +47,21 @@ async def get_next_point(tree: Tree):
         case "to_int":
             return int(tree.children[0])
         case "res":
-            return sum(await get_next_point(child) for child in tree.children)
+            return sum([await get_next_point(child) for child in tree.children])
         case _ as unknown:
             raise ParseError("Can't parse " + unknown)
 
-
-async def calculate(text: str):
+async def parsing(text:str, grammar:str):
     try:
-        return await get_next_point(Lark(GRAMMAR, start="start").parse(text))
+        return await get_next_point(Lark(grammar, start="start").parse(text))
     except UnexpectedCharacters as e:
         raise ParseError(e)
+
+
+async def calculate(text: str):
+    with open("grammar_calculator.lark") as f:
+        return await parsing(text, f.read())
+
+async def roll_dices(text:str):
+    with open("grammar_dice.lark") as f:
+        return await parsing(text, f.read())
