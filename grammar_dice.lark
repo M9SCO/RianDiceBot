@@ -1,0 +1,22 @@
+?start     : iter
+           | filtration                -> res
+
+?iter       : num    "x" start          -> repeat
+            | num    "х" start          -> repeat
+            | start  "x" num            -> repeat
+            | start  "х" num            -> repeat
+
+?filtration : filtration "h" num?        -> max
+            | filtration "в" num?        -> max
+            | filtration "l" num?        -> min
+            | filtration "н" num?        -> min
+            | dice
+
+?dice       : num? "d" num               -> dice
+            | num? "к" num               -> dice
+            | num? "k" num               -> dice
+            | num? "д" num               -> dice
+
+
+?num        : NUMBER                    -> to_int
+%import common.NUMBER
