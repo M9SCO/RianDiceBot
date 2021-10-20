@@ -1,0 +1,19 @@
+from lark import Tree
+
+
+async def simple_calculation(tree: Tree) -> int: ...
+
+
+async def roll_dice(tree: Tree) -> list[int] | list[list[int]]: ...
+
+
+async def get_next_point(tree: Tree) -> int | simple_calculation | roll_dice: ...
+
+
+async def roll_dices(text: str, path_to_grammar: str = "/src/grammar_dice.lark") -> list[int] | list[list[int]]: ...
+
+
+async def calculate(text: str, path_to_grammar: str = "/src/grammar_calculator.lark") -> int: ...
+
+
+async def parsing(text: str, grammar: str) -> list[int] | list[list[int]] | int: ...
