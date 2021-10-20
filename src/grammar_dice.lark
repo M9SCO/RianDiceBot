@@ -1,22 +1,18 @@
-?start     : iter
-           | filtration
-
-?iter       : num    "x" start          -> repeat
-            | num    "х" start          -> repeat
-            | start  "x" num            -> repeat
-            | start  "х" num            -> repeat
-
-?filtration : filtration "h" num?        -> max
-            | filtration "в" num?        -> max
-            | filtration "l" num?        -> min
-            | filtration "н" num?        -> min
+?start      : iter
+            | filtration
+?iter       : num    "x" start   -> repeat_sw
+            | num    "х" start   -> repeat_sw
+            | start  "x" num     -> repeat_ew
+            | start  "х" num     -> repeat_ew
+            | filtration
+?filtration : filtration "h" num? -> max
+            | filtration "в" num? -> max
+            | filtration "l" num? -> min
+            | filtration "н" num? -> min
             | dice
-
-?dice       : num? "d" num               -> dice
-            | num? "к" num               -> dice
-            | num? "k" num               -> dice
-            | num? "д" num               -> dice
-
-
-?num        : NUMBER                    -> to_int
+?dice       : num? "d" num        -> dice
+            | num? "к" num        -> dice
+            | num? "k" num        -> dice
+            | num? "д" num        -> dice
+?num        : NUMBER              -> to_int
 %import common.NUMBER
