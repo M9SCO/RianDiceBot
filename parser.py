@@ -29,15 +29,15 @@ async def simple_calculation(tree: Tree):
 
 async def roll_dice(tree: Tree):
     if len(tree.children) == 2:
-        thrown, face = [get_next_point(child) for child in tree.children]
+        thrown, face = [await get_next_point(child) for child in tree.children]
     else:
-        thrown, face = 1, get_next_point(tree.children[0])[0]
+        thrown, face = 1, await get_next_point(tree.children[0])[0]
 
-    if thrown > MAX_THROWN:
-        raise DiceLimits("Thrown dices must be interval 0< and >" + str(MAX_THROWN))
-    elif face > MAX_FACES:
-        raise DiceLimits("Faces dices must be interval 0< and >" + str(MAX_FACES))
-    return sum([randint(1, face) for _ in range(thrown)])
+    # if thrown > MAX_THROWN:
+    #     raise DiceLimits("Thrown dices must be interval 0< and >" + str(MAX_THROWN))
+    # elif face > MAX_FACES:
+    #     raise DiceLimits("Faces dices must be interval 0< and >" + str(MAX_FACES))
+    return [randint(1, face) for _ in range(thrown)]
 
 
 async def get_next_point(tree: Tree):
@@ -48,6 +48,8 @@ async def get_next_point(tree: Tree):
             return int(tree.children[0])
         case "res":
             return sum([await get_next_point(child) for child in tree.children])
+        case "dice":
+            return await roll_dice(tree)
         case _ as unknown:
             raise ParseError("Can't parse " + unknown)
 

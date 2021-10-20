@@ -1,5 +1,5 @@
 ?start     : iter
-           | filtration                -> res
+           | filtration
 
 ?iter       : num    "x" start          -> repeat
             | num    "х" start          -> repeat

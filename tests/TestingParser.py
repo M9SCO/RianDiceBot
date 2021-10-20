@@ -1,3 +1,6 @@
+import asyncio
+from random import seed
+
 from aiounittest import AsyncTestCase, async_test
 from parser import parsing
 from errors import ParseError
@@ -42,10 +45,15 @@ class TesterCalculator(AsyncTestCase):
             await self.use_formula("2?2", 0)
 
 class TesterDice(AsyncTestCase):
-    # async def roll_dice(self, f: str, max: int):
-    #     with open("../grammar_dice.lark") as file:
-    #         self.assertTrue(await parsing(f, file.read())<=max, )
-    # @async_test
-    # async def test_roll(self):
-    #     await self.roll_dice("1d20", )
+    async def roll_dice(self, f: str):
+        with open("../grammar_dice.lark") as file:
+            return await parsing(f, file.read())
+
+    def setUp(self):
+        seed(1)
+
+    @async_test
+    async def test_roll(self):
+        expected = await self.roll_dice("1d20",)
+        self.assertEqual(expected, [5])
     ...
