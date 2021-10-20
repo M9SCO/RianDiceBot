@@ -1,18 +1,15 @@
-import os
-from operator import add, mul, sub, truediv as div, neg
+from operator import add, mul, sub, truediv as div
 from random import randint
-from unittest import __dir__
 
-from lark import Lark, Tree
+from lark import Lark
 from lark.exceptions import UnexpectedCharacters
 
-from __config__ import MAX_THROWN, MAX_FACES
-from errors import NotFoundMethod, ParseError, DiceLimits
+from exceptions import ParseError
 
 __all__ = ["calculate"]
 
 
-async def simple_calculation(tree: Tree):
+async def simple_calculation(tree):
     match tree.data:
         case "add":
             f = add
@@ -20,27 +17,21 @@ async def simple_calculation(tree: Tree):
             f = sub
         case "mul":
             f = mul
-        case "div":
+        case _:
             f = div
-        case _ as unknown_method:
-            raise NotFoundMethod("Not found method: " + unknown_method)
     return f(*[await get_next_point(child) for child in tree.children])
 
 
-async def roll_dice(tree: Tree):
+async def roll_dice(tree):
     if len(tree.children) == 2:
         thrown, face = [await get_next_point(child) for child in tree.children]
     else:
-        thrown, face = 1, await get_next_point(tree.children[0])[0]
+        thrown, face = 1, await get_next_point(*tree.children)
 
-    # if thrown > MAX_THROWN:
-    #     raise DiceLimits("Thrown dices must be interval 0< and >" + str(MAX_THROWN))
-    # elif face > MAX_FACES:
-    #     raise DiceLimits("Faces dices must be interval 0< and >" + str(MAX_FACES))
     return [randint(1, face) for _ in range(thrown)]
 
 
-async def get_next_point(tree: Tree):
+async def get_next_point(tree):
     match tree.data:
         case "add" | "sub" | "mul" | "div":
             return await simple_calculation(tree)
@@ -50,20 +41,20 @@ async def get_next_point(tree: Tree):
             return sum([await get_next_point(child) for child in tree.children])
         case "dice":
             return await roll_dice(tree)
-        case _ as unknown:
-            raise ParseError("Can't parse " + unknown)
 
-async def parsing(text:str, grammar:str):
+
+async def parsing(text, grammar):
     try:
         return await get_next_point(Lark(grammar, start="start").parse(text))
     except UnexpectedCharacters as e:
         raise ParseError(e)
 
 
-async def calculate(text: str):
-    with open("grammar_calculator.lark") as f:
+async def calculate(text, path_to_grammar="grammar_calculator.lark"):
+    with open(path_to_grammar) as f:
         return await parsing(text, f.read())
 
-async def roll_dices(text:str):
-    with open("grammar_dice.lark") as f:
+
+async def roll_dices(text, path_to_grammar):
+    with open(path_to_grammar) as f:
         return await parsing(text, f.read())
