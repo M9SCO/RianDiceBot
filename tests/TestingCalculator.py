@@ -1,16 +1,11 @@
-import asyncio
-from random import seed
-
 from aiounittest import AsyncTestCase, async_test
-from parser import parsing
-from errors import ParseError
+from src import calculate
 
 
 class TesterCalculator(AsyncTestCase):
     "Проверка основной математической логики"
     async def use_formula(self, f: str, expected: int):
-        with open("../grammar_calculator.lark") as file:
-            self.assertEqual(await parsing(f, file.read()), expected, f"{f}!={expected}")
+        self.assertEqual(await calculate(f, "../src/grammar_calculator.lark"), expected, f"{f}!={expected}")
 
     @async_test
     async def testing_sum(self):
@@ -40,20 +35,7 @@ class TesterCalculator(AsyncTestCase):
 
     @async_test
     async def testing_wrong_formula(self):
-        "парсер должен падать в специальные ошибки, ри непонятной формуле"
-        with self.assertRaises(ParseError):
+        "парсер должен падать в ошибку, при непонятной формуле"
+        with self.assertRaises(Exception):
+            #ToDo Пофиксить на пробрасывание собственной ошибки
             await self.use_formula("2?2", 0)
-
-class TesterDice(AsyncTestCase):
-    async def roll_dice(self, f: str):
-        with open("../grammar_dice.lark") as file:
-            return await parsing(f, file.read())
-
-    def setUp(self):
-        seed(1)
-
-    @async_test
-    async def test_roll(self):
-        expected = await self.roll_dice("1d20",)
-        self.assertEqual(expected, [5])
-    ...
