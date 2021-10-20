@@ -31,6 +31,23 @@ async def roll_dice(tree):
     return [randint(1, face) for _ in range(thrown)]
 
 
+async def filtration_dices(tree):
+    dices: list[int] = await get_next_point(tree.children[0])
+    lst = []
+    for i in range(await get_next_point(tree.children[1]) if len(tree.children) > 1 else 1):
+        if len(dices) == 0:
+            break
+        match tree.data:
+            case "max":
+                f = max
+            case "min":
+                f = min
+        res = f(dices)
+        lst.append(res)
+        dices.remove(res)
+    return lst
+
+
 async def get_next_point(tree):
     match tree.data:
         case "add" | "sub" | "mul" | "div":
@@ -41,6 +58,12 @@ async def get_next_point(tree):
             return sum([await get_next_point(child) for child in tree.children])
         case "dice":
             return await roll_dice(tree)
+        case "repeat_sw":
+            return [await get_next_point(tree.children[1]) for _ in range(await get_next_point(tree.children[0]))]
+        case "repeat_ew":
+            return [await get_next_point(tree.children[0]) for _ in range(await get_next_point(tree.children[1]))]
+        case "max" | "min":
+            return await filtration_dices(tree)
 
 
 async def parsing(text, grammar):
