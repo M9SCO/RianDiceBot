@@ -24,6 +24,9 @@ class Dice:
         self._result = None
         self._retain = None
 
+    def __str__(self):
+        return f"[{'+'.join(map(str, self.result)) if isinstance(self.result, list) else str(self.result)}]"
+
     def _get_retains(self):
         if self._retain_n is None and self._retain_f is None:
             return None

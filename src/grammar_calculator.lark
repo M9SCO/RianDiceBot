@@ -12,6 +12,7 @@
 ?result     : num                -> res
 
 ?num        : "(" s_math ")"
+            | "[" s_math "]"
             | NUMBER                    -> to_int
 
 %import common.NUMBER
