@@ -12,19 +12,19 @@ class Dice:
                  "_retain",
                  )
 
-    def __init__(self, throw: int,
-                 face: int,
+    def __init__(self, throw,
+                 face,
                  retain_f=None,
-                 retain_n: int | None = None):
-        self._throw: int = throw
-        self._face: int = face
+                 retain_n=None):
+        self._throw = throw
+        self._face = face
         self._retain_f = retain_f
-        self._retain_n: int | None = retain_n
+        self._retain_n = retain_n
 
-        self._result: int | list[int] | None = None
-        self._retain: list[int] | None = None
+        self._result = None
+        self._retain = None
 
-    def _get_retains(self) -> list[int] | None:
+    def _get_retains(self):
         if self._retain_n is None and self._retain_f is None:
             return None
         elif (self._retain_f is None and not self._retain_n is None) or \
@@ -42,32 +42,30 @@ class Dice:
         return results
 
     @property
-    def _all_result(self) -> list[int]:
+    def _all_result(self):
         if not self._result:
             self._result = [randint(1, self._face) for _ in range(self._throw)]
         return self._result
 
     @property
-    def throw(self) -> int:
+    def throw(self):
         return self._throw
 
     @property
-    def face(self) -> int:
+    def face(self):
         return self._face
 
     @property
-    def retains(self) -> None | list[int]:
+    def retains(self):
         if self._retain is None:
             self._retain = self._get_retains()
         return self._retain
 
     @property
-    def result(self) -> int | list[int]:
+    def result(self):
         list_results = self._all_result.copy()
         if self.retains:
             list_results = self._retain
         if len(list_results) == 1:
             return list_results[0]
         return list_results
-
-
