@@ -79,19 +79,19 @@ async def get_next_point(tree):
 
 
 async def parsing(text, grammar):
-    trees = Lark(grammar, start="start").parse(text, start="start")
+    trees = Lark(grammar, start="start").parse(text)
     return await get_next_point(trees)
 
 
 async def calculate(text, path_to_grammar="src/grammar_calculator.lark"):
-    with open(path_to_grammar) as f:
+    with open(path_to_grammar, encoding="UTF-8") as f:
         grammar = f.read()
 
     return await parsing(text, grammar)
 
 
 async def roll_dices(text, path_to_grammar="src/grammar_dice.lark"):
-    with open(path_to_grammar) as f:
+    with open(path_to_grammar, encoding="UTF-8") as f:
         grammar = f.read()
     return await parsing(text, grammar)
 
@@ -100,5 +100,4 @@ async def get_result(text: str):
     formula: str = text
     for dice in findall(r"(\d?[хx]?\d*[dkдк]\d+[hlxвнdх]?\d*)", text):
         formula = formula.replace(dice, str(await roll_dices(dice)))
-    print(formula)
     return f"{text}:\n{formula}={await calculate(formula)}"

@@ -6,7 +6,7 @@ from exceptions import ParseError
 from src import roll_dices, Dice
 
 
-class TesterDice(TestCase):
+class TesterDiceRoller(TestCase):
     def roll_dice(self, f: str) -> Dice | list[Dice]:
         return run(roll_dices(f, "../src/grammar_dice.lark"))
 
@@ -19,15 +19,15 @@ class TesterDice(TestCase):
 
     def test_roll_3d6(self):
         """Должен обрабатывать простую нотацию кубов"""
-        self.assertEqual(self.roll_dice("3d6", ).result, [2, 5, 1])
+        self.assertEqual(self.roll_dice("3д6", ).result, [2, 5, 1])
 
     def test_multiply_roll_startswith_x(self):
         """Должен уметь кидать несколько раз подряд кубы если Х указан слева"""
-        self.assertEqual([[dice.result] for dice in self.roll_dice("2xd20")], [[5], [19]])
+        self.assertEqual([[dice.result] for dice in self.roll_dice("2xк20")], [[5], [19]])
 
     def test_multiply_roll_endswith_x(self):
         """Должен уметь кидать несколько раз подряд кубы если Х указан справа"""
-        self.assertEqual([[dice.result] for dice in self.roll_dice("d20x2")], [[5], [19]])
+        self.assertEqual([[dice.result] for dice in self.roll_dice("k20x2")], [[5], [19]])
 
     def testing_filtration_high_2d20h(self):
         """Должен выбирать максимальный результат, даже если это не указано явно"""

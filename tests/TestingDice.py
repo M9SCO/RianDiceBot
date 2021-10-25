@@ -5,7 +5,7 @@ from exceptions import DiceError
 from src import Dice
 
 
-class MyTestCase(TestCase):
+class TesterDice(TestCase):
 
     def setUp(self) -> None:
         seed(1)
