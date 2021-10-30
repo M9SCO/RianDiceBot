@@ -1,5 +1,5 @@
 from operator import add, mul, sub, truediv as div
-from re import findall
+from re import findall, match
 
 from lark import Lark
 
@@ -42,18 +42,7 @@ async def filtration_dices(tree):
     dice._retain_n = await get_next_point(tree.children[1]) if len(tree.children) > 1 else 1
     return dice
 
-
-async def expect(tree):
-    match tree.data:
-        case "repeat_sw" | "repeat_ew" \
-            if "repeat_sw" in (tree.children[0].data, tree.children[1].data) or \
-            "reoeat_ew" in  (tree.children[0].data, tree.children[1].data):
-
-            raise ParseError("Illegal use recursion")
-
-
 async def get_next_point(tree):
-    await expect(tree)
     match tree.data:
         case "add" | "sub" | "mul" | "div":
             return await simple_calculation(tree)
@@ -63,19 +52,8 @@ async def get_next_point(tree):
             return sum([await get_next_point(child) for child in tree.children])
         case "dice":
             return await parse_roll_dice(tree)
-        case "repeat_sw":
-            result = [await get_next_point(tree.children[1]) for _ in range(await get_next_point(tree.children[0]))]
-            if isinstance(result[0], list):
-                raise ParseError("Illegal use recursion")
-            return result
-        case "repeat_ew":
-            result = [await get_next_point(tree.children[0]) for _ in range(await get_next_point(tree.children[1]))]
-            if isinstance(result[0], list):
-                raise ParseError("Illegal use recursion")
-            return result
         case "max" | "min":
-            result = await filtration_dices(tree)
-            return result
+            return await filtration_dices(tree)
 
 
 async def parsing(text, grammar):
@@ -83,21 +61,29 @@ async def parsing(text, grammar):
     return await get_next_point(trees)
 
 
-async def calculate(text, path_to_grammar="src/grammar_calculator.lark"):
+async def calculate(text, path_to_grammar):
     with open(path_to_grammar, encoding="UTF-8") as f:
         grammar = f.read()
 
     return await parsing(text, grammar)
 
 
-async def roll_dices(text, path_to_grammar="src/grammar_dice.lark"):
+async def roll_dices(text, path_to_grammar):
     with open(path_to_grammar, encoding="UTF-8") as f:
         grammar = f.read()
     return await parsing(text, grammar)
 
 
-async def get_result(text: str):
+async def get_result(text, path_dice_grammar="src/grammar_dice.lark", path_calc_grammar="src/grammar_calculator.lark"):
+    result = {"total": 0,
+              "dices": []}
     formula: str = text
-    for dice in findall(r"(\d?[хx]?\d*[dkдк]\d+[hlxвнdх]?\d*)", text):
-        formula = formula.replace(dice, str(await roll_dices(dice)))
-    return f"{text}:\n{formula}={await calculate(formula)}"
+    matching = match(r"^(\d+)[xх]", formula)
+    if matching:
+        return [await get_result(text.replace(matching.group(0), ""), path_dice_grammar, path_calc_grammar)]
+    for dice in findall(r"(\d?[xх]?\d*[dkдк]\d+[hlxхвнd]?\d*)", text):
+        value = await roll_dices(text=dice, path_to_grammar=path_dice_grammar)
+        result["dices"].append((dice, value))
+        formula = formula.replace(dice, str(value), 1)
+    result["total"] = await calculate(text=formula, path_to_grammar=path_calc_grammar)
+    return result

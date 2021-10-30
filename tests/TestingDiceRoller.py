@@ -20,15 +20,6 @@ class TesterDiceRoller(TestCase):
     def test_roll_3d6(self):
         """Должен обрабатывать простую нотацию кубов"""
         self.assertEqual(self.roll_dice("3д6", ).result, [2, 5, 1])
-
-    def test_multiply_roll_startswith_x(self):
-        """Должен уметь кидать несколько раз подряд кубы если Х указан слева"""
-        self.assertEqual([[dice.result] for dice in self.roll_dice("2xк20")], [[5], [19]])
-
-    def test_multiply_roll_endswith_x(self):
-        """Должен уметь кидать несколько раз подряд кубы если Х указан справа"""
-        self.assertEqual([[dice.result] for dice in self.roll_dice("k20x2")], [[5], [19]])
-
     def testing_filtration_high_2d20h(self):
         """Должен выбирать максимальный результат, даже если это не указано явно"""
         self.assertEqual(self.roll_dice("2d20h").result, 19)
@@ -52,15 +43,4 @@ class TesterDiceRoller(TestCase):
     def testing_banchmarc(self):
         """Должен оставить все кубы, если их количество меньше чем необходимо оставить"""
         self.assertIsNotNone(self.roll_dice("10000d100000").result)
-
-
-    def test_multiply_roll_start_endswith_x(self):
-        """должен спотыкаться, если используется формат Nx{dice}xN"""
-        with self.assertRaises(ParseError) as e :
-            self.roll_dice("2xd20x2")
-
-    def test_multiply_roll_start_startswith_x(self):
-        """должен спотыкаться, если используется формат NxNx{dice}"""
-        with self.assertRaises(ParseError) as e :
-            self.roll_dice("2x2xd20")
 

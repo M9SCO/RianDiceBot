@@ -27,6 +27,10 @@ class Dice:
     def __str__(self):
         return f"[{'+'.join(map(str, self.result)) if isinstance(self.result, list) else str(self.result)}]"
 
+    def __repr__(self) -> str:
+        return f"Dice(throw={self.throw}, face={self.face}, retain_f = {self._retain_f}, " \
+               f"retain_n = {self._retain_n}, result = {self.result})"
+
     def _get_retains(self):
         if self._retain_n is None and self._retain_f is None:
             return None
