@@ -1,6 +1,3 @@
-from lark.exceptions import UnexpectedCharacters
-
-
 class DiceError(Exception):
     ...
 

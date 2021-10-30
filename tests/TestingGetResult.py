@@ -1,9 +1,7 @@
 from asyncio import run
-from os import chdir, getcwd
 from random import seed
 from unittest import TestCase
 
-from Dice import Dice
 from src import get_result
 
 

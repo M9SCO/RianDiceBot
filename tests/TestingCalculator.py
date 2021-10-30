@@ -1,10 +1,12 @@
 from asyncio import run
 from unittest import TestCase
+
 from src import calculate
 
 
 class TesterCalculator(TestCase):
     "Проверка основной математической логики"
+
     def use_formula(self, f: str, expected: int):
         self.assertEqual(run(calculate(f, "../src/grammar_calculator.lark")), expected, f"{f}!={expected}")
 
@@ -32,5 +34,5 @@ class TesterCalculator(TestCase):
     def testing_wrong_formula(self):
         "парсер должен падать в ошибку, при непонятной формуле"
         with self.assertRaises(Exception):
-            #ToDo Пофиксить на пробрасывание собственной ошибки
+            # ToDo Пофиксить на пробрасывание собственной ошибки
             self.use_formula("2?2", 0)

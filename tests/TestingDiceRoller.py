@@ -2,7 +2,6 @@ from asyncio import run
 from random import seed
 from unittest import TestCase
 
-from exceptions import ParseError
 from src import roll_dices, Dice
 
 
@@ -20,6 +19,7 @@ class TesterDiceRoller(TestCase):
     def test_roll_3d6(self):
         """Должен обрабатывать простую нотацию кубов"""
         self.assertEqual(self.roll_dice("3д6", ).result, [2, 5, 1])
+
     def testing_filtration_high_2d20h(self):
         """Должен выбирать максимальный результат, даже если это не указано явно"""
         self.assertEqual(self.roll_dice("2d20h").result, 19)
@@ -43,4 +43,3 @@ class TesterDiceRoller(TestCase):
     def testing_banchmarc(self):
         """Должен оставить все кубы, если их количество меньше чем необходимо оставить"""
         self.assertIsNotNone(self.roll_dice("10000d100000").result)
-
