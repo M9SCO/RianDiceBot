@@ -3,7 +3,6 @@ from re import findall, match
 
 from lark import Lark
 
-from exceptions import ParseError
 from src.modules.Dice import Dice
 
 __all__ = ["get_result"]
@@ -41,6 +40,7 @@ async def filtration_dices(tree):
             dice._retain_f = min
     dice._retain_n = await get_next_point(tree.children[1]) if len(tree.children) > 1 else 1
     return dice
+
 
 async def get_next_point(tree):
     match tree.data:

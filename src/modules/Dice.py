@@ -1,6 +1,6 @@
 from random import randint
 
-from exceptions import DiceError
+from src.exceptions import DiceError
 
 
 class Dice:
@@ -34,8 +34,7 @@ class Dice:
     def _get_retains(self):
         if self._retain_n is None and self._retain_f is None:
             return None
-        elif (self._retain_f is None and not self._retain_n is None) or \
-                (self._retain_n is None and not self._retain_f is None):
+        elif not all((self._retain_f, self._retain_n)):
             raise DiceError("Unspecified retain formula or count for save")
         elif self._retain_n > self._throw:
             return None

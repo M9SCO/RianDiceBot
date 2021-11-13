@@ -1,5 +1,6 @@
-from parser import get_result
 from asyncio import run
+
+from src import get_result
 
 while True:
     try:

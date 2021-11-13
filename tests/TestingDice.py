@@ -1,8 +1,8 @@
 from random import seed
 from unittest import TestCase
 
-from exceptions import DiceError
 from src import Dice
+from src.exceptions import DiceError
 
 
 class TesterDice(TestCase):
@@ -11,9 +11,11 @@ class TesterDice(TestCase):
         seed(1)
 
     def test_actual_throw(self):
+        """значение Dice.throw сответвует поданному числу"""
         self.assertEqual(Dice(throw=1, face=20).throw, 1)
 
     def test_actual_face(self):
+        """значение Dice.face сответвует поданному числу"""
         self.assertEqual(Dice(throw=1, face=20).face, 20)
 
     def test_roll_1d20(self):
@@ -42,5 +44,6 @@ class TesterDice(TestCase):
         self.assertEqual(actual.result, [19, 9, 5])
 
     def test_raise_if_use_part_retain(self):
+        """если необходимо урезать количесво бросков, то необходимо подавать retain_f месте с retain_n, а не по одиночке"""
         with self.assertRaises(DiceError):
             self.assertEqual(Dice(throw=1, face=20, retain_f=lambda data: data[0]).result, 5)
