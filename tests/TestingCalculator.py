@@ -8,7 +8,7 @@ class TesterCalculator(TestCase):
     "Проверка основной математической логики"
 
     def use_formula(self, f: str, expected: int):
-        self.assertEqual(run(calculate(f, "../src/grammar_calculator.lark")), expected, f"{f}!={expected}")
+        self.assertEqual(run(calculate(f, "../resources/grammar_calculator.lark")), expected, f"{f}!={expected}")
 
     def testing_sum(self):
         "Должно корректно складывать"

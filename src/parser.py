@@ -4,7 +4,7 @@ from re import findall, match
 from lark import Lark
 
 from exceptions import ParseError
-from src.Dice import Dice
+from src.modules.Dice import Dice
 
 __all__ = ["get_result"]
 
@@ -74,7 +74,9 @@ async def roll_dices(text, path_to_grammar):
     return await parsing(text, grammar)
 
 
-async def get_result(text, path_dice_grammar="src/grammar_dice.lark", path_calc_grammar="src/grammar_calculator.lark"):
+async def get_result(text,
+                     path_dice_grammar="resources/grammar_dice.lark",
+                     path_calc_grammar="resources/grammar_calculator.lark"):
     result = {"total": 0,
               "dices": []}
     formula: str = text

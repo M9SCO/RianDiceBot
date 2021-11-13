@@ -1,5 +1,5 @@
-from .Dice import Dice
-from .parser import (roll_dices,
+from src.modules.Dice import Dice
+from src.parser import (roll_dices,
                      calculate,
                      get_result)
 

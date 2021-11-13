@@ -8,7 +8,7 @@ from src import get_result
 class TesterGetResult(TestCase):
 
     def getter(self, formula):
-        return run(get_result(formula, "../src/grammar_dice.lark", "../src/grammar_calculator.lark"))
+        return run(get_result(formula, "../resources/grammar_dice.lark", "../resources/grammar_calculator.lark"))
 
     def setUp(self) -> None:
         seed(1)
