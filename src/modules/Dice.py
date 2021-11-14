@@ -25,8 +25,10 @@ class Dice:
         self._retain = None
 
     def to_str(self, view_retains=False, startswith_retain='<strike>', endswith_retain='</strike>'):
+        if (not isinstance(self._all_result, list) or not self.retains) and view_retains:
+            view_retains = False
 
-        if view_retains and len(self.result) != len(self._all_result):
+        if view_retains and len(self.retains) != len(self._all_result):
             values = list(map(str, self._all_result)) if isinstance(self._all_result, list) else [str(self._all_result)]
             retains, cut = list(map(str, self.retains)), []
             for n, value in enumerate(values):
