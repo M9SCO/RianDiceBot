@@ -24,8 +24,21 @@ class Dice:
         self._result = None
         self._retain = None
 
-    def __str__(self):
-        return f"[{'+'.join(map(str, self.result)) if isinstance(self.result, list) else str(self.result)}]"
+    def to_str(self, view_retains=False, startswith_retain='<strike>', endswith_retain='</strike>'):
+
+        if view_retains and len(self.result) != len(self._all_result):
+            values = list(map(str, self._all_result)) if isinstance(self._all_result, list) else [str(self._all_result)]
+            retains, cut = list(map(str, self.retains)), []
+            for n, value in enumerate(values):
+                if value in retains:
+                    retains.remove(value)
+                else:
+                    cut.append(value)
+                    values[n] = f"{startswith_retain}{value}{endswith_retain}"
+        else:
+            values = map(str, self.result) if isinstance(self.result, list) else [str(self.result)]
+
+        return f"[{'+'.join(values)}]"
 
     def __repr__(self) -> str:
         return f"Dice(throw={self.throw}, face={self.face}, retain_f = {self._retain_f}, " \

@@ -3,6 +3,7 @@ from re import findall, match
 
 from lark import Lark
 
+from modules.Result import Result
 from src.modules.Dice import Dice
 
 __all__ = ["get_result"]
@@ -77,15 +78,15 @@ async def roll_dices(text, path_to_grammar):
 async def get_result(text,
                      path_dice_grammar="resources/grammar_dice.lark",
                      path_calc_grammar="resources/grammar_calculator.lark"):
-    result = {"total": 0,
-              "dices": []}
-    formula: str = text
-    matching = match(r"^(\d+)[xх]", formula)
+    result = Result(raw=text)
+    result.dices = []
+
+    matching = match(r"^(\d+)[xх]", text)
     if matching:
-        return [await get_result(text.replace(matching.group(0), ""), path_dice_grammar, path_calc_grammar)]
-    for dice in findall(r"(\d?[xх]?\d*[dkдк]\d+[hlxхвнd]?\d*)", text):
-        value = await roll_dices(text=dice, path_to_grammar=path_dice_grammar)
-        result["dices"].append((dice, value))
-        formula = formula.replace(dice, str(value), 1)
-    result["total"] = await calculate(text=formula, path_to_grammar=path_calc_grammar)
+        return [await get_result(text.replace(matching.group(0), ""), path_dice_grammar, path_calc_grammar)
+                for _ in range(int(matching.group(1)))]
+    for dice in findall(r"(\d*[dkдк]\d+[hlвнd]?\d*)", text):
+        value: Dice = await roll_dices(text=dice, path_to_grammar=path_dice_grammar)
+        result.dices.append((dice, value))
+    result.total = await calculate(text=result.replaced_dices, path_to_grammar=path_calc_grammar)
     return result
