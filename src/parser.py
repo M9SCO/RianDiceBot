@@ -28,10 +28,6 @@ async def parse_roll_dice(tree):
         thrown, face = [await get_next_point(child) for child in tree.children]
     else:
         thrown, face = 1, await get_next_point(*tree.children)
-
-    if thrown > 100 or face > 1000:
-        raise DiceLimits
-
     return Dice(throw=thrown, face=face)
 
 

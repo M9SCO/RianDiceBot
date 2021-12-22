@@ -1,5 +1,6 @@
 from asyncio import run
 from random import seed
+from time import time
 from unittest import TestCase
 
 from modules.Result import Result
@@ -38,16 +39,21 @@ class TesterGetResult(TestCase):
         '''Результирующую строчку при отсеивании больших меньших значений должен возвращать корректную'''
         result = self.getter("4к6+1")
         self.assertEqual(result.total, 12)
-        self.assertEqual(result.replaced_dices, "[2+5+1+3]+1")
+        self.assertEqual(result.replaced_dices, "11+1")
         self.assertEqual(result.total_formula, "[2+5+1+3]+1=12")
 
     def test_get_result_formula_with_retains(self):
         '''Результирующую строчку при отсеивании больших меньших значений должен возвращать корректную'''
         result = self.getter("4к1в3+1")
         self.assertEqual(result.total, 4)
-        self.assertEqual(result.replaced_dices, "[1+1+1]+1")
+        self.assertEqual(result.replaced_dices, "3+1")
         self.assertEqual(result.total_formula, "[1+1+1+<strike>1</strike>]+1=4")
 
     def test_get_multiline_result_formula(self):
         '''Если используется мультибросок, то должен возвращать список классов Result'''
         self.assertTrue(self.getter("6х4к6в3+1"), list)
+
+    def test_stress(self):
+        strated = time()
+        self.getter("100000d1000")
+        self.assertTrue(time() - strated < 1)
