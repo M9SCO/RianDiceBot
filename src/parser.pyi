@@ -1,5 +1,6 @@
 from lark import Tree
 
+from .modules.Result import Result
 from .modules.Dice import Dice
 
 
@@ -29,4 +30,4 @@ async def roll_dices(text: str, path_to_grammar: str = "resources/grammar_dice.l
 
 async def get_result(text: str,
                      path_dice_grammar: str = "resources/grammar_dice.lark",
-                     path_calc_grammar: str = "resources/grammar_calculator.lark") -> str: ...
+                     path_calc_grammar: str = "resources/grammar_calculator.lark") -> Result: ...

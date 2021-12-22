@@ -5,6 +5,7 @@ from lark import Lark
 
 from modules.Result import Result
 from src.modules.Dice import Dice
+from src.exceptions import DiceLimits
 
 __all__ = ["get_result"]
 
