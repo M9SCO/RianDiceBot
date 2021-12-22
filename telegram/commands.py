@@ -1,7 +1,7 @@
 from aiogram.types import Message, KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove
+from aiogram.utils.exceptions import MessageIsTooLong
 from lark import UnexpectedCharacters
 
-from exceptions import DiceLimits
 from src import get_result
 
 from .bot import dp
@@ -29,12 +29,9 @@ async def roller_dice(message: Message):
     try:
         result = await get_result(message.text[1:] if message.text.startswith('/') else message.text)
         if isinstance(result, list):
-            if len(result) > 10:
-                raise DiceLimits
-
             res = f"\n".join(r.total_formula for r in result)
         else:
             res = result.total_formula
         return await message.answer(f"{message.from_user.mention} {message.text}:\n{res}", parse_mode="HTML")
-    except (UnexpectedCharacters, DiceLimits):
+    except (UnexpectedCharacters, MessageIsTooLong):
         pass

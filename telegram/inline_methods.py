@@ -3,7 +3,6 @@ from uuid import uuid4
 from aiogram.types import InlineQuery, InlineQueryResultArticle, InputTextMessageContent
 from lark import UnexpectedCharacters
 
-from exceptions import DiceLimits
 from src import get_result
 from telegram.bot import dp, bot
 from telegram.config import DICES
@@ -28,6 +27,6 @@ async def inline_roll_dice(inline_query: InlineQuery):
                                                   title=f"Roll: {dice}",
                                                   input_message_content=InputTextMessageContent(result_str,
                                                                                                 parse_mode="HTML")))
-        except(UnexpectedCharacters, DiceLimits):
+        except(UnexpectedCharacters):
             pass
     await bot.answer_inline_query(inline_query.id, results=items, cache_time=1)
