@@ -28,7 +28,7 @@ class Dice:
         if (not isinstance(self._all_result, list) or not self.retains) and view_retains:
             view_retains = False
 
-        if view_retains and len(self.retains) != len(self._all_result):
+        if view_retains and isinstance(self.result, list) and len(self.result) != len(self._all_result):
             values = list(map(str, self._all_result)) if isinstance(self._all_result, list) else [str(self._all_result)]
             retains, cut = list(map(str, self.retains)), []
             for n, value in enumerate(values):
@@ -90,3 +90,9 @@ class Dice:
         if len(list_results) == 1:
             return list_results[0]
         return list_results
+
+    @property
+    def total(self):
+        if isinstance(self.result, int):
+            return self.result
+        return sum(self.result)

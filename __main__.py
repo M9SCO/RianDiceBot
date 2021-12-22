@@ -73,3 +73,4 @@ async def inline_roll_dice(inline_query: InlineQuery):
 
 
 executor.start_polling(dp, skip_updates=True)
+
