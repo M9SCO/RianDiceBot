@@ -20,5 +20,5 @@ class Result:
     def replaced_dices(self):
         result = self.raw
         for dice, cls in self.dices:
-            result = result.replace(dice, cls.to_str(), 1)
+            result = result.replace(dice, str(cls.total), 1)
         return result
