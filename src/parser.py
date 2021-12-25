@@ -3,7 +3,7 @@ from re import findall, match
 
 from lark import Lark
 
-from modules.Result import Result
+from src.modules.Result import Result
 from src.modules.Dice import Dice
 
 __all__ = ["get_result"]
