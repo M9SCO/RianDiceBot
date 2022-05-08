@@ -2,12 +2,12 @@ from asyncio import run
 from random import seed
 from unittest import TestCase
 
-from src import roll_dices, Dice
+from src import open_lark, Dice
 
 
 class TesterDiceRoller(TestCase):
     def roll_dice(self, f: str) -> Dice | list[Dice]:
-        return run(roll_dices(f, "../resources/grammar_dice.lark"))
+        return run(open_lark(f, "../resources/grammar_dice.lark"))
 
     def setUp(self) -> None:
         seed(1)

@@ -1,8 +1,9 @@
 from operator import add, mul, sub, truediv as div
-from re import findall, match
+from re import findall, search
 
-from lark import Lark
+from lark import Lark, UnexpectedCharacters
 
+from src.exceptions import ParseError
 from src.modules.Result import Result
 from src.modules.Dice import Dice
 
@@ -56,36 +57,29 @@ async def get_next_point(tree):
             return await filtration_dices(tree)
 
 
-async def parsing(text, grammar):
+async def open_lark(text, path_to_grammar):
+    with open(path_to_grammar, encoding="UTF-8") as f:
+        grammar = f.read()
     trees = Lark(grammar, start="start").parse(text)
+
     return await get_next_point(trees)
-
-
-async def calculate(text, path_to_grammar):
-    with open(path_to_grammar, encoding="UTF-8") as f:
-        grammar = f.read()
-
-    return await parsing(text, grammar)
-
-
-async def roll_dices(text, path_to_grammar):
-    with open(path_to_grammar, encoding="UTF-8") as f:
-        grammar = f.read()
-    return await parsing(text, grammar)
 
 
 async def get_result(text,
                      path_dice_grammar="resources/grammar_dice.lark",
                      path_calc_grammar="resources/grammar_calculator.lark"):
-    result = Result(raw=text)
-    result.dices = []
-
-    matching = match(r"^(\d+)[xх]", text)
-    if matching:
-        return [await get_result(text.replace(matching.group(0), ""), path_dice_grammar, path_calc_grammar)
-                for _ in range(int(matching.group(1)))]
-    for dice in findall(r"(\d*[dkдк]\d+[hlвнd]?\d*)", text):
-        value: Dice = await roll_dices(text=dice, path_to_grammar=path_dice_grammar)
-        result.dices.append((dice, value))
-    result.total = await calculate(text=result.replaced_dices, path_to_grammar=path_calc_grammar)
-    return result
+    results = []
+    repeats_math = search(r"(^\d+)[хx]|[хx](\d+$)", text)
+    repeats = repeats_math.group(1) or repeats_math.group(2) if repeats_math else 1
+    for _ in range(int(repeats) if int(repeats) < 10 else 10):
+        t = text.replace(repeats_math.group(0), "") if repeats_math else text
+        result = Result(raw=t)
+        result.dices = []
+        for dice in findall(r"(\d*[dkдк]\d+[hlвнd]?\d*)", t):
+            value: Dice = await open_lark(text=dice, path_to_grammar=path_dice_grammar)
+            result.dices.append((dice, value))
+        result.total = await open_lark(text=result.replaced_dices, path_to_grammar=path_calc_grammar)
+        if str(result.total) == t:
+            raise ParseError
+        results.append(result)
+    return results
