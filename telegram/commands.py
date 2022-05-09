@@ -66,32 +66,33 @@ Various uses:
 d11
 3d4+1
 d6+k4
-/2k20v - throw 2 times icosahedron and take 1 maximum result
-4d6h3 - roll 4 hexagonal dice and leave only 3 maximum results
-20k12+3x10 - throw 20 times tweaker, add to result 3, repeat 10 times
+/2k20h - roll 2 times and take the highest roll
+4d6h3 - roll 4 hexagonal dice and take the 3 highest rolls
+20k12+3x10 - roll 20 times, add to result 3, repeat 10 times
 
 How it works:
 {throws}[dkdc]{faces}, where 
 {throws} - how many random results to get;
 [dkdk] - one of the delimiters listed;
-{faces} - the number of faces of the cube to throw.
-To highlight the most [number] larger or smaller roll results, use [hb] [number] or [lh] [pure] respectively.
-To repeat multiple [times] identical rolls, use [times]x[throws] or [throws]x[throws]
-The bot supports the following arithmetic operations on cubes and numbers "+", "-", "*", "/", \
-and also prioritizes actions, when using round and square brackets "((", ")", "[", "]"" 
+{faces} - the number of faces of the dice to throw.
+To highlight the [number] larger or smaller roll results, use {roll}[hв]{number} or {roll}[lн]{number} respectively.
+To repeat multiple [times] identical rolls, use [times]x[throws] or [throws]x[times]
+The bot supports the following arithmetic operations on dice and numbers "+", "-", "*", "/", and also prioritizes actions, when using round and square brackets "((", ")", "[", "]"" 
 
-To open the keyboard of the commonly used cubes, press /kb, /keyboard, and to close /hide.
-You can create your own keyboard for the commonly used cubes by continuing the /kb or /keyboard command, separating future buttons " /":
-/kb /2d20h //d20 /2d20l /d20+1 /d20+2 /d6+k4 - compose a keyboard with 6 quick dial buttons
+To open the keyboard of the commonly used dice, press /kb, /keyboard, and to close /hide.
+You can create your own keyboard for the commonly used dice by continuing the /kb or /keyboard command, separating future buttons " /":
+/kb /2d20h /d20 /2d20l /d20+1 /d20+2 /d6+k4 - compose a keyboard with 6 quick dial buttons
   
 Feedback - @VilliamFeedbackBot"""
     await message.answer(text, parse_mode="HTML")
-    print(message)
 
 
 @dp.message_handler(regexp=r"(^[\/dkдк])|([dkдк]\d)")
 async def roller_dice(message: Message):
-    text = message.text.lower().replace(" ", "")
+    if message.is_command():
+        text = message.get_command(True)
+    else:
+        text = message.text.lower().replace(" ", "")
     try:
         result = await get_result(text[1:] if text.startswith('/') else text)
         if isinstance(result, list):
