@@ -20,7 +20,7 @@ class TesterDice(TestCase):
 
     def test_roll_1d20(self):
         """если кидать 1Кчто-то-там, то должно вернуть число"""
-        self.assertEqual(Dice(throw=1, face=20).result, 5)
+        self.assertEqual(Dice(throw=1, face=20).result, [5])
 
     def test_roll_20d20(self):
         """если кидать много-чего-то-тамКчто-там то должно вернуть лист кубов"""
@@ -29,7 +29,7 @@ class TesterDice(TestCase):
 
     def test_roll_3d20l(self):
         """если к кубам добавить сортировку "меньше", то должен поубирать результаты, не проходящие по условию"""
-        self.assertEqual(Dice(throw=3, face=20, retain_f=min, retain_n=1).result, 3)
+        self.assertEqual(Dice(throw=3, face=20, retain_f=min, retain_n=1).result, [3])
 
     def test_roll_2d20l3(self):
         """если сортируемое количество превышает количество бросков, то сортировка подавляется"""
