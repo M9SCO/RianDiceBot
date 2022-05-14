@@ -4,6 +4,6 @@ from aiogram.utils import executor
 
 from telegram.bot import dp
 
-basicConfig(format='%(asctime)s [%(levelname)-8s] %(message)s', level=INFO)
+basicConfig(format='[%(levelname)-8s] %(message)s', level=INFO)
 
 executor.start_polling(dp, skip_updates=True)
