@@ -16,3 +16,4 @@
             | NUMBER                    -> to_int
 
 %import common.NUMBER
+%ignore " "

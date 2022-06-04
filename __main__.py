@@ -1,6 +1,9 @@
-from asyncio import run
+from logging import basicConfig, INFO
 
-from src import get_result
+from aiogram.utils import executor
 
-while True:
-    print(run(get_result(input())).total_formula)
+from telegram.bot import dp
+
+basicConfig(format='[%(levelname)-8s] %(message)s', level=INFO)
+
+executor.start_polling(dp, skip_updates=True)

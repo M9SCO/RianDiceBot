@@ -1,6 +1,4 @@
 from src.modules.Dice import Dice
-from src.parser import (roll_dices,
-                        calculate,
-                        get_result)
+from src.parser import (get_result, open_lark)
 
-__all__ = ["roll_dices", "calculate", "get_result", "Dice"]
+__all__ = ["open_lark", "get_result", "Dice"]

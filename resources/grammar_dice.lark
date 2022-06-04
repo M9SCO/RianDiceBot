@@ -1,10 +1,4 @@
-?start      : iter
-            | filtration
-?iter       : num    "x" start   -> repeat_sw
-            | num    "х" start   -> repeat_sw
-            | start  "x" num     -> repeat_ew
-            | start  "х" num     -> repeat_ew
-            | filtration
+?start      : filtration
 ?filtration : filtration "h" num? -> max
             | filtration "в" num? -> max
             | filtration "l" num? -> min
@@ -16,3 +10,4 @@
             | num? "д" num        -> dice
 ?num        : NUMBER              -> to_int
 %import common.NUMBER
+%ignore " "
