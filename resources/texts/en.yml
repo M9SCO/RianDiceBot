@@ -1,0 +1,35 @@
+help: |-
+  About this bot.
+  
+  Various uses:
+  /d100
+  /20d20
+  d11
+  3d4+1
+  d6+d4
+  /2d20h - roll 2 times and take the highest roll
+  4d6h3 - roll 4 hexagonal dice and take the 3 highest rolls
+  20d12+3x10 - roll 20 times, add to result 3, repeat 10 times
+  
+  How it works:
+  {throws}[dkdc]{faces}, where 
+  {throws} - how many random results to get;
+  [dkdk] - one of the delimiters listed;
+  {faces} - the number of faces of the dice to throw.
+  To highlight the [number] larger or smaller roll results, use {roll}[hв]{number} or {roll}[lн]{number} respectively.
+  To repeat multiple [times] identical rolls, use [times]x[throws] or [throws]x[times]
+  The bot supports the following arithmetic operations on dice and numbers "+", "-", "*", "/".
+  Аnd also prioritizes actions, when using round and square brackets "((", ")", "[", "]"" 
+  If you want to calling the rolling dice bot only "/", use command /only_slash. Calling it again will disable this option
+  
+  To open the keyboard of the commonly used dice, press /kb, /keyboard, and to close /hide.
+  You can create your own keyboard for the commonly used dice by continuing the /kb or /keyboard command, separating future buttons " /":
+  /kb /2d20h /d20 /2d20l /d20+1 /d20+2 /d6+k4 - compose a keyboard with 6 quick dial buttons
+    
+  Feedback - @VilliamFeedbackBot
+
+ignoring_non_slash_on: |-
+  Hard call bot has been on.
+
+ignoring_non_slash_off: |-
+  Safe call bot has been on.

@@ -2,4 +2,4 @@ __pycache__/
 .idea/
 venv/
 telegram/config.py
-only_slash.pickle
+resources/only_slash.pickle

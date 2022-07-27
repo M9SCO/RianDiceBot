@@ -2,10 +2,10 @@ from uuid import uuid4
 
 from aiogram.types import InlineQuery, InlineQueryResultArticle, InputTextMessageContent
 from lark import UnexpectedCharacters
+from rolling_dice import get_result
 
-from src import get_result
-from telegram.bot import dp, bot
-from telegram.config import DICES
+from bin._ import DICES
+from bin.bot import dp, bot
 
 
 @dp.inline_handler()
@@ -17,7 +17,7 @@ async def inline_roll_dice(inline_query: InlineQuery):
         dices = [inline_query.query]
     for dice in dices:
         try:
-            result = await get_result(dice)
+            result = get_result(dice)
             if isinstance(result, list):
                 total = "\n".join(r.total_formula for r in result)
             else:

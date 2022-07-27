@@ -2,7 +2,7 @@ from logging import basicConfig, INFO
 
 from aiogram.utils import executor
 
-from telegram.bot import dp
+from safe_imports import dp
 
 basicConfig(format='[%(levelname)-8s] %(message)s', level=INFO)
 
