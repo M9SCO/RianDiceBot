@@ -1,6 +1,7 @@
 from bin.bot import bot, dp
 from bin.locales import get_locale, load_locales
 from commands.only_slash import only_slash
+from commands.start import send_hello
 from inline_requests import roll_dice_query
 
 
@@ -19,7 +20,8 @@ __all__ = (
     "only_slash",
     "roll_dice",
     "add_pickle_file",
-    "roll_dice_query"
+    "roll_dice_query",
+    "send_hello"
 
 )
 
