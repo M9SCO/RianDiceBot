@@ -2,10 +2,10 @@ from lib2to3.pgen2.parse import ParseError
 from logging import info
 from pickle import load
 
+from PowerfulDiceRoller import get_result
 from aiogram.types import Message
 from aiogram.utils.exceptions import MessageIsTooLong
 from lark import UnexpectedCharacters
-from rolling_dice import get_result
 
 from bin._ import PICKLE_SLASH
 from bin.bot import dp

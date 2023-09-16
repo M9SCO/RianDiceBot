@@ -1,8 +1,8 @@
 from uuid import uuid4
 
+from PowerfulDiceRoller import get_result
 from aiogram.types import InlineQuery, InlineQueryResultArticle, InputTextMessageContent
 from lark import UnexpectedCharacters
-from rolling_dice import get_result
 
 from bin._ import DICES
 from bin.bot import dp, bot
@@ -18,10 +18,7 @@ async def inline_roll_dice(inline_query: InlineQuery):
     for dice in dices:
         try:
             result = get_result(dice)
-            if isinstance(result, list):
-                total = "\n".join(r.total_formula for r in result)
-            else:
-                total = result.total_formula
+            total = "\n".join(r.total_formula for r in result)
             result_str = f"{inline_query.from_user.mention} {dice}:\n{total}"
             items.append(InlineQueryResultArticle(id=uuid4().__str__(),
                                                   title=f"Roll: {dice}",
