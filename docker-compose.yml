@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: my_python_app
+    restart: unless-stopped
+    environment:
+      TOKEN_TELEGRAM: 1234567890:AAAAAAAAAAAAAAAAAAAAAAAA-AAAAAAAAAA
+
+
+
