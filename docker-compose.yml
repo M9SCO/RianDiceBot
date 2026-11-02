@@ -1,7 +1,6 @@
 services:
   app:
     build: .
-    container_name: my_python_app
     restart: unless-stopped
     env_file:
       - .env
