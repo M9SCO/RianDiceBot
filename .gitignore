@@ -3,3 +3,4 @@ __pycache__/
 venv/
 telegram/config.py
 resources/only_slash.pickle
+.env
